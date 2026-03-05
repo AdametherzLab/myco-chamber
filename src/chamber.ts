@@ -1,4 +1,5 @@
-import type { EnvironmentConditions, StageRanges, SpeciesProfile, AlertSeverity, ParameterAlert, AlertResult, ContaminationFactors, ContaminationRisk, ConditionCheck } from "./types.js";
+import type { EnvironmentConditions, StageRanges, SpeciesProfile, ParameterAlert, AlertResult, ContaminationFactors, ContaminationRisk, ConditionCheck } from "./types.js";
+import { AlertSeverity } from "./types.js";
 
 /**
  * Configuration for alert severity thresholds.

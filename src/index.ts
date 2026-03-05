@@ -2,7 +2,6 @@ import type {
   EnvironmentConditions,
   StageRanges,
   SpeciesProfile,
-  AlertSeverity,
   ParameterAlert,
   AlertResult,
   ContaminationFactors,
@@ -16,7 +15,6 @@ export type {
   EnvironmentConditions,
   StageRanges,
   SpeciesProfile,
-  AlertSeverity,
   ParameterAlert,
   AlertResult,
   ContaminationFactors,
@@ -25,6 +23,8 @@ export type {
   SpeciesId,
   SpeciesDatabase,
 };
+
+export { AlertSeverity } from "./types.js";
 
 export {
   getSpeciesById,
@@ -40,3 +40,13 @@ export {
   computeContaminationRisk,
   checkConditions,
 } from "./chamber.js";
+
+export type { SubstrateIngredient, SubstrateRecipe, SubstrateMix } from "./substrate.js";
+export {
+  SUBSTRATE_RECIPES,
+  calculateMoistureContent,
+  calculateSubstrate,
+} from "./substrate.js";
+
+export type { GrowPhase, GrowTimeline } from "./timeline.js";
+export { estimateTimeline } from "./timeline.js";

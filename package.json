@@ -1,7 +1,7 @@
 {
   "name": "@adametherzlab/myco-chamber",
-  "version": "0.1.0",
-  "description": "Mushroom grow chamber calculator — temp/humidity/CO2 for 30+ species",
+  "version": "2.0.0",
+  "description": "Mushroom grow chamber calculator — 30+ species, substrate recipes, grow timelines, contamination alerts",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -37,7 +37,11 @@
     "mushrooms",
     "mycology",
     "growing",
-    "environment-control"
+    "environment-control",
+    "substrate",
+    "timeline",
+    "grow-calculator",
+    "mushroom-farming"
   ],
   "author": {
     "name": "AdametherzLab",

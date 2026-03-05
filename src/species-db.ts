@@ -578,7 +578,110 @@ const speciesDatabase = {
       humidityMin: 85,
       humidityMax: 95,
       co2Max: 600,
-      fae
+      faeMin: 4,
+    },
+    notes: "Purple-lilac cap and stem. Prefers cool fruiting temperatures.",
+  },
+  cordyceps: {
+    commonName: "Cordyceps",
+    scientificName: "Cordyceps militaris",
+    incubation: {
+      tempMin: 20,
+      tempMax: 25,
+      humidityMin: 70,
+      humidityMax: 80,
+      co2Max: 5000,
+      faeMin: 1,
+    },
+    fruiting: {
+      tempMin: 18,
+      tempMax: 22,
+      humidityMin: 85,
+      humidityMax: 95,
+      co2Max: 500,
+      faeMin: 6,
+    },
+    notes: "Medicinal species. Requires light for fruiting body formation.",
+  },
+  oyster_pearl: {
+    commonName: "Pearl Oyster",
+    scientificName: "Pleurotus ostreatus var. florida",
+    incubation: {
+      tempMin: 20,
+      tempMax: 26,
+      humidityMin: 70,
+      humidityMax: 85,
+      co2Max: 8000,
+      faeMin: 1,
+    },
+    fruiting: {
+      tempMin: 15,
+      tempMax: 24,
+      humidityMin: 85,
+      humidityMax: 95,
+      co2Max: 800,
+      faeMin: 5,
+    },
+    notes: "White to cream colored. Versatile grower.",
+  },
+  chaga: {
+    commonName: "Chaga",
+    scientificName: "Inonotus obliquus",
+    incubation: {
+      tempMin: 18,
+      tempMax: 24,
+      humidityMin: 70,
+      humidityMax: 80,
+      co2Max: 5000,
+      faeMin: 1,
+    },
+    fruiting: {
+      tempMin: 10,
+      tempMax: 20,
+      humidityMin: 85,
+      humidityMax: 95,
+      co2Max: 600,
+      faeMin: 4,
+    },
+    notes: "Medicinal fungus. Extremely slow growing, typically harvested from birch trees.",
+  },
+} as const satisfies Record<string, SpeciesProfile>;
+
+type SpeciesEntry = SpeciesProfile & { id: SpeciesId };
+
+export function getAllSpecies(): SpeciesEntry[] {
+  return Object.entries(speciesDatabase).map(([id, profile]) => ({
+    ...profile,
+    id: createSpeciesId(id),
+  }));
 }
+
+export function getSpeciesById(id: string): SpeciesEntry {
+  const profile = speciesDatabase[id as keyof typeof speciesDatabase];
+  if (!profile) throw new RangeError(`Unknown species: ${id}`);
+  return { ...profile, id: createSpeciesId(id) };
 }
+
+export function searchSpeciesByName(query: string): SpeciesEntry[] {
+  if (!query) return [];
+  const q = query.toLowerCase();
+  return getAllSpecies().filter(
+    s => s.commonName.toLowerCase().includes(q) || s.scientificName.toLowerCase().includes(q)
+  );
+}
+
+export function getSpeciesByStageConditions(
+  stage: "incubation" | "fruiting",
+  conditions: { temperature?: number; humidity?: number }
+): SpeciesEntry[] {
+  return getAllSpecies().filter(s => {
+    const ranges = s[stage];
+    if (conditions.temperature !== undefined) {
+      if (conditions.temperature < ranges.tempMin || conditions.temperature > ranges.tempMax) return false;
+    }
+    if (conditions.humidity !== undefined) {
+      if (conditions.humidity < ranges.humidityMin || conditions.humidity > ranges.humidityMax) return false;
+    }
+    return true;
+  });
 }

@@ -1,4 +1,3 @@
-import type { ReadonlyDeep } from "node:util";
 
 /**
  * Represents a single reading of environmental conditions.
@@ -54,6 +53,7 @@ export interface SpeciesProfile {
  */
 export enum AlertSeverity {
   /** Conditions are within optimal range. */
+  Ok = "ok",
   /** Minor deviation that may slow growth. */
   Warning = "warning",
   /** Major deviation that can cause growth failure or contamination. */
@@ -140,4 +140,4 @@ export type SpeciesId = string & { readonly __brand: "SpeciesId" };
 /**
  * Database of all available mushroom species profiles.
  */
-export type SpeciesDatabase = ReadonlyDeep<Record<SpeciesId, SpeciesProfile>>;
+export type SpeciesDatabase = Readonly<Record<SpeciesId, SpeciesProfile>>;
