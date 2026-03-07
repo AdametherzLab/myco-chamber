@@ -30,7 +30,9 @@ export {
   getSpeciesById,
   getAllSpecies,
   searchSpeciesByName,
-  getSpeciesByStageConditions,
+  isEnvironmentConditions,
+  isStageRanges,
+  isSpeciesProfile,
 } from "./species-db.js";
 
 export type { AlertThresholds } from "./chamber.js";
@@ -50,3 +52,9 @@ export {
 
 export type { GrowPhase, GrowTimeline } from "./timeline.js";
 export { estimateTimeline } from "./timeline.js";
+
+export {
+  isEnvironmentConditions,
+  isStageRanges,
+  isSpeciesProfile,
+} from "./validators.js";
