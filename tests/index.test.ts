@@ -20,6 +20,7 @@ import {
   type AlertResult,
   type ContaminationRisk,
   type SubstrateIngredient,
+  type CustomSubstrateRecipeInput,
 } from "../src/index.ts";
 
 describe("input validators", () => {

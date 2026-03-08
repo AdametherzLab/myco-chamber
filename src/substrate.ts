@@ -27,6 +27,18 @@ export interface SubstrateRecipe {
 }
 
 /**
+ * Input format for a custom substrate recipe.
+ */
+export interface CustomSubstrateRecipeInput {
+  /** Human-readable name of the recipe. */
+  readonly name: string;
+  /** List of base ingredients with their dry weight ratios and inherent moisture content. */
+  readonly ingredients: readonly { name: string; ratio: number; moisturePercent: number }[];
+  /** Default target moisture percentage for the final substrate (0-100). */
+  readonly defaultMoistureTarget: number;
+}
+
+/**
  * Pre-defined substrate mix identifiers.
  */
 export type SubstrateMix = "hardwood-sawdust" | "straw" | "coco-coir" | "masters-mix";
@@ -107,17 +119,37 @@ export function calculateMoistureContent(ingredients: readonly SubstrateIngredie
  * Returns the ingredient weights needed to reach the target total weight
  * at the desired moisture content.
  *
- * @param mix - Pre-defined substrate mix identifier
+ * @param mix - Pre-defined substrate mix identifier or a custom recipe object
  * @param targetWeightGrams - Desired total weight in grams (wet weight)
  * @param moistureTarget - Optional target moisture percentage (uses recipe default if omitted)
  * @returns Complete substrate recipe with calculated ingredient weights
  */
 export function calculateSubstrate(
-  mix: SubstrateMix,
+  mix: SubstrateMix | CustomSubstrateRecipeInput,
   targetWeightGrams: number,
   moistureTarget?: number
 ): SubstrateRecipe {
-  const base = BASE_RECIPES[mix];
+  let base: BaseRecipe;
+
+  if (typeof mix === 'string') {
+    base = BASE_RECIPES[mix];
+  } else {
+    // Validate custom recipe input
+    if (!mix || !mix.name || !Array.isArray(mix.ingredients) || mix.ingredients.length === 0 || typeof mix.defaultMoistureTarget !== 'number') {
+      throw new Error("Invalid custom substrate recipe provided.");
+    }
+    for (const ing of mix.ingredients) {
+      if (!ing.name || typeof ing.ratio !== 'number' || ing.ratio <= 0 || typeof ing.moisturePercent !== 'number' || ing.moisturePercent < 0 || ing.moisturePercent > 100) {
+        throw new Error(`Invalid ingredient in custom recipe: ${JSON.stringify(ing)}`);
+      }
+    }
+    const totalRatio = mix.ingredients.reduce((sum, ing) => sum + ing.ratio, 0);
+    if (Math.abs(totalRatio - 1) > 0.001) { // Allow for minor floating point inaccuracies
+      throw new Error("Custom recipe ingredient ratios must sum to 1.");
+    }
+    base = mix;
+  }
+
   const target = moistureTarget ?? base.defaultMoistureTarget;
 
   // Calculate dry mass needed: totalWeight = dryMass + waterMass

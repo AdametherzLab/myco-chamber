@@ -1,4 +1,3 @@
-
 /**
  * Represents a single reading of environmental conditions.
  * All values are in standard units: Celsius, percentage, ppm, and air exchanges per hour.
@@ -141,3 +140,9 @@ export type SpeciesId = string & { readonly __brand: "SpeciesId" };
  * Database of all available mushroom species profiles.
  */
 export type SpeciesDatabase = Readonly<Record<SpeciesId, SpeciesProfile>>;
+
+export type {
+  SubstrateIngredient,
+  SubstrateRecipe,
+  CustomSubstrateRecipeInput,
+} from './substrate.js';
