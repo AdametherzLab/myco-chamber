@@ -1,6 +1,6 @@
 {
   "name": "@adametherzlab/myco-chamber",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Mushroom grow chamber calculator — 30+ species, substrate recipes, grow timelines, contamination alerts",
   "type": "module",
   "main": "./dist/index.js",

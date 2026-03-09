@@ -30,10 +30,13 @@ export {
   getSpeciesById,
   getAllSpecies,
   searchSpeciesByName,
+} from "./species-db.js";
+
+export {
   isEnvironmentConditions,
   isStageRanges,
   isSpeciesProfile,
-} from "./species-db.js";
+} from "./validators.js";
 
 export type { AlertThresholds } from "./chamber.js";
 export {
@@ -53,8 +56,5 @@ export {
 export type { GrowPhase, GrowTimeline } from "./timeline.js";
 export { estimateTimeline } from "./timeline.js";
 
-export {
-  isEnvironmentConditions,
-  isStageRanges,
-  isSpeciesProfile,
-} from "./validators.js";
+export type { CustomSpeciesEntry, CustomSpeciesStore, CustomSpeciesStoreOptions } from "./custom-species.js";
+export { createCustomSpeciesStore, CustomSpeciesError } from "./custom-species.js";
