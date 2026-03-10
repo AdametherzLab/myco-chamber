@@ -60,11 +60,15 @@ export type { CustomSpeciesEntry, CustomSpeciesStore, CustomSpeciesStoreOptions 
 export { createCustomSpeciesStore, CustomSpeciesError, exportProfile, importProfile } from "./custom-species.js";
 
 export type { CustomSpeciesUIOptions } from "./custom-species-ui.js";
-export { createCustomSpeciesUI } from "./custom-species-ui.js";
+export {
+  createCustomSpeciesUI
+} from "./custom-species-ui.js";
 export type { UIComponentsOptions } from "./custom-species-ui-components.js";
-export { 
-  renderPage, 
-  renderSpeciesList, 
-  renderSpeciesForm, 
-  renderSuccess 
+export {
+  renderPage,
+  renderSpeciesList,
+  renderSpeciesForm,
+  renderSuccess
 } from "./custom-species-ui-components.js";
+
+export { TimelineVisualizer } from './timeline-visualizer.js';
