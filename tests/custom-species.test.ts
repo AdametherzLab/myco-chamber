@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "bun:test";
 import { existsSync, unlinkSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
-import { createCustomSpeciesStore, CustomSpeciesError } from "../src/custom-species.ts";
+import { createCustomSpeciesStore, CustomSpeciesError, exportProfile, importProfile } from "../src/custom-species.ts";
 import { checkConditions } from "../src/chamber.ts";
 import type { SpeciesProfile } from "../src/types.ts";
 
@@ -208,6 +208,41 @@ describe("CustomSpeciesStore", () => {
       expect(result.stage).toBe("fruiting");
       expect(result.alert).toBeDefined();
       expect(result.contaminationRisk).toBeDefined();
+    });
+  });
+
+  describe("profile import/export", () => {
+    it("exports profile to portable JSON", () => {
+      const json = exportProfile(validProfile);
+      const parsed = JSON.parse(json);
+      expect(parsed.commonName).toBe("Black Morel");
+      expect(parsed.incubation.tempMin).toBe(18);
+    });
+
+    it("imports valid profile JSON", () => {
+      const json = exportProfile(validProfile);
+      const imported = importProfile(json);
+      expect(imported.commonName).toBe("Black Morel");
+      expect(imported.incubation.faeMin).toBe(1);
+    });
+
+    it("throws when importing invalid JSON structure", () => {
+      expect(() => importProfile("{ bad json }")).toThrow(CustomSpeciesError);
+    });
+
+    it("throws when importing invalid profile data", () => {
+      const badJson = JSON.stringify({
+        commonName: "Invalid",
+        incubation: { tempMin: "not a number" },
+      });
+      expect(() => importProfile(badJson)).toThrow(CustomSpeciesError);
+    });
+
+    it("roundtrips profile through export/import", () => {
+      const original = validProfile;
+      const json = exportProfile(original);
+      const imported = importProfile(json);
+      expect(imported).toEqual(original);
     });
   });
 });

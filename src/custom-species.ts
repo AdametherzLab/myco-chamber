@@ -267,3 +267,37 @@ export function createCustomSpeciesStore(options: CustomSpeciesStoreOptions = {}
 
   return store;
 }
+
+/**
+ * Export a single species profile to a portable JSON format
+ * @param profile - Validated species profile to export
+ * @returns JSON string containing only the profile data
+ * @throws {CustomSpeciesError} If profile validation fails
+ */
+export function exportProfile(profile: SpeciesProfile): string {
+  validateProfile(profile);
+  return JSON.stringify(profile, null, 2);
+}
+
+/**
+ * Import a species profile from JSON format
+ * @param json - JSON string containing species profile data
+ * @returns Validated SpeciesProfile object
+ * @throws {CustomSpeciesError} If JSON is invalid or profile validation fails
+ */
+export function importProfile(json: string): SpeciesProfile {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(json);
+  } catch (error) {
+    throw new CustomSpeciesError("Invalid JSON format");
+  }
+
+  try {
+    validateProfile(parsed);
+  } catch (error) {
+    throw new CustomSpeciesError(`Invalid species profile: ${error instanceof Error ? error.message : String(error)}`);
+  }
+
+  return parsed as SpeciesProfile;
+}
