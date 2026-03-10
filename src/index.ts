@@ -57,4 +57,4 @@ export type { GrowPhase, GrowTimeline } from "./timeline.js";
 export { estimateTimeline } from "./timeline.js";
 
 export type { CustomSpeciesEntry, CustomSpeciesStore, CustomSpeciesStoreOptions } from "./custom-species.js";
-export { createCustomSpeciesStore, CustomSpeciesError } from "./custom-species.js";
+export { createCustomSpeciesStore, CustomSpeciesError, exportProfile, importProfile } from "./custom-species.js";
