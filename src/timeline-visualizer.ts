@@ -9,16 +9,29 @@ interface TimelineVisualizerOptions {
   startDate?: Date;
 }
 
+/**
+ * Interactive visualizer for mushroom grow timelines using Chart.js.
+ * Renders a horizontal bar chart (Gantt-style) showing growth phases
+ * with date ranges, environmental conditions, and tooltips.
+ */
 export class TimelineVisualizer {
   private chart: Chart | null = null;
   private phasesWithDates: Array<GrowPhase & { startDate: Date; endDate: Date }> = [];
+  private lastTimeline: GrowTimeline | null = null;
 
   constructor(
     private readonly canvas: HTMLCanvasElement,
     private options: TimelineVisualizerOptions = { responsive: true }
   ) {}
 
+  /**
+   * Render the timeline visualization.
+   * Creates a new Chart.js instance displaying grow phases as horizontal bars
+   * with time-based x-axis.
+   * @param timeline - The grow timeline to visualize
+   */
   render(timeline: GrowTimeline): void {
+    this.lastTimeline = timeline;
     this.destroy();
     const startDate = this.options.startDate ?? new Date();
     this.calculatePhasesWithDates(timeline, startDate);
@@ -84,7 +97,13 @@ export class TimelineVisualizer {
     });
   }
 
+  /**
+   * Update the visualization with a new timeline.
+   * Efficiently updates the existing chart if available, otherwise re-renders.
+   * @param timeline - The updated grow timeline
+   */
   update(timeline: GrowTimeline): void {
+    this.lastTimeline = timeline;
     if (!this.chart) {
       this.render(timeline);
       return;
@@ -106,10 +125,15 @@ export class TimelineVisualizer {
     this.chart.update();
   }
 
+  /**
+   * Update the start date and re-render the timeline.
+   * Adjusts all phase dates while maintaining the same durations.
+   * @param startDate - The new start date for the timeline
+   */
   setStartDate(startDate: Date): void {
     this.options.startDate = startDate;
-    if (this.chart) {
-      this.update(this.chart.data.datasets[0].data ? this.chart.data : null);
+    if (this.lastTimeline) {
+      this.update(this.lastTimeline);
     }
   }
 
@@ -129,13 +153,13 @@ export class TimelineVisualizer {
 
   private getTimelineTitle(timeline: GrowTimeline, startDate: Date): string {
     const harvestDate = this.phasesWithDates[this.phasesWithDates.length - 1].endDate;
-    return `${timeline.species} Timeline
-` +
-      `Start: ${format(startDate, 'MMM dd')} | ` +
-      `Harvest: ${format(harvestDate, 'MMM dd')} ` +
-      `(Total: ${timeline.totalDays} days)`;
+    return `${timeline.species} Timeline: Start ${format(startDate, 'MMM dd')} → Harvest ${format(harvestDate, 'MMM dd')} (${timeline.totalDays} days)`;
   }
 
+  /**
+   * Destroy the Chart.js instance and clean up resources.
+   * Should be called when the visualizer is no longer needed.
+   */
   destroy(): void {
     this.chart?.destroy();
     this.chart = null;
